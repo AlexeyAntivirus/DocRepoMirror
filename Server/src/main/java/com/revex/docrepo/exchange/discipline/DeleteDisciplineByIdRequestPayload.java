@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class DeleteDisciplineByIdRequestPayload {
-    private long disciplineId;
+	private long disciplineId;
 }

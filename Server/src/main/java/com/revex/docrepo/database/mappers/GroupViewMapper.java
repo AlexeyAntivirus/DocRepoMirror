@@ -10,11 +10,11 @@ import java.sql.SQLException;
 @Component
 public class GroupViewMapper implements RowMapper<GroupView> {
 
-    @Override
-    public GroupView mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return GroupView.builder()
-                .id(rs.getLong("id"))
-                .groupName(rs.getString("nazva"))
-                .build();
-    }
+	@Override
+	public GroupView mapRow(ResultSet rs, int rowNum) throws SQLException {
+		return GroupView.builder()
+				.id(rs.getLong("id"))
+				.groupName(rs.getString("nazva"))
+				.build();
+	}
 }

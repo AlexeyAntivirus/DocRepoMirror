@@ -16,7 +16,7 @@ public class UploadFileOptions {
     @Override
     public String toString() {
         StringBuilder resultString = new StringBuilder()
-                .append("/").append(documentType);
+                .append(documentType);
 
         if (documentType == DocumentType.DIPLOMA_WORKS) {
             resultString.append("/").append(studyYear)

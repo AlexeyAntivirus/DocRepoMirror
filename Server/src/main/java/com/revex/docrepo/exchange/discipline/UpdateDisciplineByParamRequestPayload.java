@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class UpdateDisciplineByParamRequestPayload {
-    private long id;
-    private String parameterKey;
-    private Object parameterValue;
+	private long id;
+	private String parameterKey;
+	private Object parameterValue;
 }

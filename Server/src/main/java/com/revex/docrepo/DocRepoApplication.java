@@ -1,15 +1,13 @@
 package com.revex.docrepo;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import org.springframework.context.annotation.Profile;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication
 public class DocRepoApplication
@@ -21,8 +19,18 @@ public class DocRepoApplication
 //        return application.sources(DocRepoApplication.class);
 //    }
 
-    public static void main(String[] args) {
-        SpringApplication.run(DocRepoApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(DocRepoApplication.class, args);
+	}
 
+	@Profile("dedicated")
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurerAdapter() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**").allowedOrigins("http://localhost:8081");
+			}
+		};
+	}
 }

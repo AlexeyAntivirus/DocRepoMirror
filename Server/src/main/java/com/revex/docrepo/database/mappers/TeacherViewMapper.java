@@ -9,11 +9,11 @@ import java.sql.SQLException;
 
 @Component
 public class TeacherViewMapper implements RowMapper<TeacherView> {
-    @Override
-    public TeacherView mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return TeacherView.builder()
-                .id(rs.getLong("id"))
-                .fullName(rs.getString("pib"))
-                .build();
-    }
+	@Override
+	public TeacherView mapRow(ResultSet rs, int rowNum) throws SQLException {
+		return TeacherView.builder()
+				.id(rs.getLong("id"))
+				.fullName(rs.getString("pib"))
+				.build();
+	}
 }

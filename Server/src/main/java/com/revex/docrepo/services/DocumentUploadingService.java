@@ -13,73 +13,101 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 
 @Service
 public class DocumentUploadingService {
 
-    private final Logger logger = LogManager.getLogger(DocumentUploadingService.class);
+	private final Logger logger = LogManager.getLogger(DocumentUploadingService.class);
 
-    private Path docsFilePath;
+	private Path docsFilePath;
 
-    public DocumentUploadingService(@Value("${docrepo.docs.filepath}") Path path) {
-        initRepository(path);
-    }
+	public DocumentUploadingService(@Value("${docrepo.docs.filepath}") Path path) {
+		initRepository(path);
+	}
 
-    public Path uploadFile(UploadFileOptions options, MultipartFile file) {
-        String relativeDirectoryPath = options.toString();
+	public Path uploadFile(UploadFileOptions options, MultipartFile file) {
+		String relativeDirectoryPath = options.toString();
 
-        Path relativeFilePath = Paths.get(relativeDirectoryPath, file.getOriginalFilename()).normalize();
-        Path absoluteDirectoryPath = docsFilePath.resolve(relativeFilePath).normalize();
-        Path sanitizedPath = this.sanitizeFile(docsFilePath.resolve(relativeDirectoryPath), absoluteDirectoryPath);
+		Path absoluteDirectoryPath = docsFilePath.resolve(relativeDirectoryPath).normalize();
 
-        try {
-            Files.createFile(sanitizedPath);
-            Files.write(sanitizedPath, file.getBytes());
+		Path relativeFilePath = Paths.get(relativeDirectoryPath, file.getOriginalFilename()).normalize();
+		Path absoluteFilePath = docsFilePath.resolve(relativeFilePath);
 
-            return relativeFilePath;
-        } catch (IOException e) {
-            throw new DocRepoFileNotUploadedException(e);
-        }
-    }
+		Path sanitizedPath = this.sanitizeFile(absoluteDirectoryPath, absoluteFilePath);
 
-    public void deleteFile(Path relativePath) {
-        Path absolutePath = docsFilePath.resolve(relativePath);
+		try {
+			if (Files.notExists(absoluteDirectoryPath)) {
+				Files.createDirectories(absoluteDirectoryPath);
+			}
+			if (Files.notExists(sanitizedPath)) {
+				Files.createFile(sanitizedPath);
+			}
 
-        try {
-            Files.delete(absolutePath);
-        } catch (IOException e) {
-            throw new DocRepoFileNotDeletedException(e);
-        }
-    }
+			Files.write(sanitizedPath, file.getBytes());
 
-    private Path sanitizeFile(Path expectedPathStart, Path actualPath) {
-        if (!actualPath.startsWith(expectedPathStart)) {
-            throw new DocRepoPathTraversalAttackException("Filename contains path traversal payload.");
-        }
+			return absoluteDirectoryPath;
+		} catch (IOException e) {
+			throw new DocRepoFileNotUploadedException(e);
+		}
+	}
 
-        return actualPath;
-    }
+	public void deleteFile(Path path) {
+		try {
+			if (Files.isDirectory(path)) {
+				Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+					@Override
+					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+						FileVisitResult fileVisitResult = super.visitFile(file, attrs);
+						Files.delete(file);
+						return fileVisitResult;
+					}
 
-    private void initRepository(Path path) {
-        this.docsFilePath = path;
+					@Override
+					public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+						FileVisitResult fileVisitResult = super.postVisitDirectory(dir, exc);
+						Files.delete(dir);
+						return fileVisitResult;
+					}
+				});
+			} else {
+				Files.delete(path);
+			}
+		} catch (IOException e) {
+			throw new DocRepoFileNotDeletedException(e);
+		}
+	}
 
-        try {
-            if (Files.notExists(this.docsFilePath)) {
-                Files.createDirectory(this.docsFilePath);
-            }
+	private Path sanitizeFile(Path expectedPathStart, Path actualPath) {
+		if (!actualPath.startsWith(expectedPathStart)) {
+			throw new DocRepoPathTraversalAttackException("Filename contains path traversal payload.");
+		}
 
-            for (DocumentType type : DocumentType.values()) {
-                if (Files.notExists(this.docsFilePath.resolve(type.toString()))) {
-                    Files.createDirectory(this.docsFilePath);
-                }
-            }
-        } catch (FileAlreadyExistsException e) {
-            logger.warn(e.getFile() + " already exists!");
-        } catch (IOException e) {
-            logger.fatal("Problems in working with files!", e);
-        }
-    }
+		return actualPath;
+	}
+
+	private void initRepository(Path path) {
+		this.docsFilePath = path;
+
+		try {
+			if (Files.notExists(this.docsFilePath)) {
+				Files.createDirectory(this.docsFilePath);
+			}
+
+			for (DocumentType type : DocumentType.values()) {
+				if (Files.notExists(this.docsFilePath.resolve(type.toString()))) {
+					Files.createDirectory(this.docsFilePath);
+				}
+			}
+		} catch (FileAlreadyExistsException e) {
+			logger.warn(e.getFile() + " already exists!");
+		} catch (IOException e) {
+			logger.fatal("Problems in working with files!", e);
+		}
+	}
 }

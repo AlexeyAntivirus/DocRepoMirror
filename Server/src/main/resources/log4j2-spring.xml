@@ -16,13 +16,13 @@
 				<pattern>[%level] ${LogEventDateTimeFormat}%n${LogEventSourceFormat}%n${MessageFormat}%n${ExceptionFormat}</pattern>
 			</PatternLayout>
 		</Console>
-		<RollingRandomAccessFile name="RollingRandomAccessFile" fileName="${LogFilesLocation}/last.log"
-		                         filePattern="${LogFilesLocation}/${LogArchivesLocation}/LogArchive-№%i-from-%d{dd.MM.yyyy}.log.gz">
+		<RollingRandomAccessFile name="RollingRandomAccessFile" fileName="${LogFilesLocation}/DocRepo-last.log"
+		                         filePattern="${LogFilesLocation}/${LogArchivesLocation}/DocRepo-LogArchive-№%i-from-%d{dd.MM.yyyy}.log.gz">
 			<PatternLayout>
 				<pattern>[%level] ${LogEventDateTimeFormat}%n${LogEventSourceFormat}%n${MessageFormat}%n${ExceptionFormat}</pattern>
 			</PatternLayout>
 			<Policies>
-				<SizeBasedTriggeringPolicy size="20 MB"/>
+				<SizeBasedTriggeringPolicy size="100 MB"/>
 				<OnStartupTriggeringPolicy/>
 			</Policies>
 			<DefaultRolloverStrategy max="20"/>
@@ -35,7 +35,7 @@
 			<AppenderRef ref="RollingRandomAccessFile"/>
 		</Logger>
 		<Logger name="org.springframework.jdbc"
-		        level="trace" additivity="false">
+		        level="info" additivity="false">
 			<AppenderRef ref="Console"/>
 			<AppenderRef ref="RollingRandomAccessFile"/>
 		</Logger>

@@ -14,6 +14,25 @@
 
 	<name>Server</name>
 
+	<profiles>
+		<profile>
+			<id>build-with-frontend</id>
+			<activation>
+				<property>
+					<name>build</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>com.revex</groupId>
+					<artifactId>client</artifactId>
+					<version>1.0-SNAPSHOT</version>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -62,6 +81,11 @@
 			<artifactId>powermock-api-mockito</artifactId>
 			<version>1.6.4</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.3.3</version>
 		</dependency>
 	</dependencies>
 

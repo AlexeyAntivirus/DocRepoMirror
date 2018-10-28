@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 @Builder
 public class InsertNewDisciplineResponsePayload {
-    private boolean isSuccessful;
+	private boolean isSuccessful;
 }

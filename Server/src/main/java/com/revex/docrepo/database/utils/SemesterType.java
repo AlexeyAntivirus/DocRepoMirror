@@ -5,36 +5,36 @@ import lombok.Getter;
 import lombok.ToString;
 
 public enum SemesterType {
-    AUTUMN("Осінній"),
-    SPRING("Весняний");
+	AUTUMN("Осінній"),
+	SPRING("Весняний");
 
-    private final String ukrainianValue;
+	private final String ukrainianValue;
 
-    SemesterType(String ukrainianValue) {
-        this.ukrainianValue = ukrainianValue;
-    }
+	SemesterType(String ukrainianValue) {
+		this.ukrainianValue = ukrainianValue;
+	}
 
-    public static SemesterType getByNumber(int number) {
-        for (SemesterType type: SemesterType.values()) {
-            if (type.ordinal() == number - 1) {
-                return type;
-            }
-        }
+	public static SemesterType getByNumber(int number) {
+		for (SemesterType type : SemesterType.values()) {
+			if (type.ordinal() == number - 1) {
+				return type;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    @JsonValue
-    public String getUkrainianValue() {
-        return ukrainianValue;
-    }
+	@JsonValue
+	public String getUkrainianValue() {
+		return ukrainianValue;
+	}
 
-    public int getNumber() {
-        return this.ordinal() + 1;
-    }
+	public int getNumber() {
+		return this.ordinal() + 1;
+	}
 
-    @Override
-    public String toString() {
-        return Integer.toString(getNumber());
-    }
+	@Override
+	public String toString() {
+		return Integer.toString(getNumber());
+	}
 }

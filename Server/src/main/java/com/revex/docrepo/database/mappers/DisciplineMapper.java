@@ -10,14 +10,14 @@ import java.sql.SQLException;
 
 @Component
 public class DisciplineMapper implements RowMapper<Discipline> {
-    @Override
-    public Discipline mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return Discipline.builder()
-                .id(rs.getLong("id"))
-                .name(rs.getString("nazva"))
-                .shortName(rs.getString("skornazva"))
-                .semesterNumber(rs.getInt("sem"))
-                .workType(WorkType.getByUkrainianValue(rs.getString("vid")))
-                .build();
-    }
+	@Override
+	public Discipline mapRow(ResultSet rs, int rowNum) throws SQLException {
+		return Discipline.builder()
+				.id(rs.getLong("id"))
+				.name(rs.getString("nazva"))
+				.shortName(rs.getString("skornazva"))
+				.semesterNumber(rs.getInt("sem"))
+				.workType(WorkType.getByUkrainianValue(rs.getString("vid")))
+				.build();
+	}
 }

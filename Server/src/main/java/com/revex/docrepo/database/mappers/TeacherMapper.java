@@ -9,16 +9,16 @@ import java.sql.SQLException;
 
 @Component
 public class TeacherMapper implements RowMapper<Teacher> {
-    @Override
-    public Teacher mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return Teacher.builder()
-                .id(rs.getLong("id"))
-                .fullName(rs.getString("pib"))
-                .cathedra(rs.getString("kaf"))
-                .degree(rs.getString("stup"))
-                .position(rs.getString("posada"))
-                .rank(rs.getString("zvan"))
-                .isWorking(rs.getInt("diuchi") == 1)
-                .build();
-    }
+	@Override
+	public Teacher mapRow(ResultSet rs, int rowNum) throws SQLException {
+		return Teacher.builder()
+				.id(rs.getLong("id"))
+				.fullName(rs.getString("pib"))
+				.cathedra(rs.getString("kaf"))
+				.degree(rs.getString("stup"))
+				.position(rs.getString("posada"))
+				.rank(rs.getString("zvan"))
+				.isWorking(rs.getInt("diuchi") == 1)
+				.build();
+	}
 }

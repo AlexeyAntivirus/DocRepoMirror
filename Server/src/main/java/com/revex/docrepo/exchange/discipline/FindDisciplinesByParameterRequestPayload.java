@@ -5,10 +5,10 @@ import lombok.Data;
 
 @Data
 public class FindDisciplinesByParameterRequestPayload {
-    private String parameterKey;
-    private String parameterValue;
+	private String parameterKey;
+	private String parameterValue;
 
-    public Object getParameterValue() {
-        return EntityDataTransformation.transformParameterValue(parameterValue);
-    }
+	public Object getParameterValue() {
+		return EntityDataTransformation.transformParameterValue(parameterValue);
+	}
 }

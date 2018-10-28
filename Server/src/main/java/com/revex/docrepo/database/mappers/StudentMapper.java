@@ -11,18 +11,18 @@ import java.sql.SQLException;
 
 @Component
 public class StudentMapper implements RowMapper<Student> {
-    @Override
-    public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return Student.builder()
-                .id(rs.getLong("id"))
-                .fullName(rs.getString("pib"))
-                .semesterType(SemesterType.getByNumber(rs.getInt("sem")))
-                .beginYear(rs.getInt("rik1"))
-                .endYear(rs.getInt("rik2"))
-                .group(GroupView.builder()
-                        .id(rs.getLong("groupId"))
-                        .groupName(rs.getString("groupName"))
-                        .build())
-                .build();
-    }
+	@Override
+	public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
+		return Student.builder()
+				.id(rs.getLong("id"))
+				.fullName(rs.getString("pib"))
+				.semesterType(SemesterType.getByNumber(rs.getInt("sem")))
+				.beginYear(rs.getInt("rik1"))
+				.endYear(rs.getInt("rik2"))
+				.group(GroupView.builder()
+						.id(rs.getLong("groupId"))
+						.groupName(rs.getString("groupName"))
+						.build())
+				.build();
+	}
 }

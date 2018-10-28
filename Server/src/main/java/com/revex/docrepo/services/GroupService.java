@@ -15,97 +15,142 @@ import java.util.List;
 
 @Service
 public class GroupService {
-    private final NamedParameterJdbcTemplate template;
-    private final GroupMapper mapper;
-    private final GroupViewMapper viewMapper;
+	private final NamedParameterJdbcTemplate template;
+	private final GroupMapper mapper;
+	private final GroupViewMapper viewMapper;
 
-    @Autowired
-    public GroupService(NamedParameterJdbcTemplate template,
-                        GroupMapper mapper,
-                        GroupViewMapper viewMapper) {
-        this.template = template;
-        this.mapper = mapper;
-        this.viewMapper = viewMapper;
-    }
+	@Autowired
+	public GroupService(NamedParameterJdbcTemplate template,
+	                    GroupMapper mapper,
+	                    GroupViewMapper viewMapper) {
+		this.template = template;
+		this.mapper = mapper;
+		this.viewMapper = viewMapper;
+	}
 
-    public GetAllGroupsResponsePayload getAllGroups() {
-        List<Group> query = template.query("SELECT * FROM groups;", mapper);
+	public GetAllGroupsResponsePayload getAllGroups() {
+		List<Group> query = template.query("SELECT * FROM groups;", mapper);
 
-        return GetAllGroupsResponsePayload.builder()
-                .groups(query)
-                .build();
-    }
+		return GetAllGroupsResponsePayload.builder()
+				.groups(query)
+				.build();
+	}
 
-    public GetAllGroupViewsResponsePayload getAllGroupViews() {
-        List<GroupView> query = template.query("SELECT id, nazva FROM groups;", viewMapper);
+	public GetAllGroupViewsResponsePayload getAllGroupViews() {
+		List<GroupView> query = template.query("SELECT " +
+				" id, nazva FROM groups;", viewMapper);
 
-        return GetAllGroupViewsResponsePayload.builder()
-                .groupViews(query)
-                .build();
-    }
+		return GetAllGroupViewsResponsePayload.builder()
+				.groupViews(query)
+				.build();
+	}
 
-    public FindGroupsByParameterResponsePayload findGroupsByParameter(FindGroupsByParameterRequestPayload payload) {
-        List<Group> result = template.query(
-                "SELECT * FROM groups WHERE " +
-                        "cast(" + payload.getParameterKey() + " as varchar(512)) ~ cast(:parameterValue as varchar(512))",
-                new MapSqlParameterSource("parameterValue", payload.getParameterValue()),
-                mapper
-        );
-        return FindGroupsByParameterResponsePayload.builder()
-                .groups(result)
-                .build();
-    }
+	public FindGroupsByParameterResponsePayload findGroupsByParameter(FindGroupsByParameterRequestPayload payload) {
+		List<Group> result = template.query(
+				"SELECT * FROM groups WHERE " +
+						"cast(" + payload.getParameterKey() + " as varchar(512)) ~ cast(:parameterValue as varchar(512))",
+				new MapSqlParameterSource("parameterValue", payload.getParameterValue()),
+				mapper
+		);
+		return FindGroupsByParameterResponsePayload.builder()
+				.groups(result)
+				.build();
+	}
 
-    public InsertNewGroupResponsePayload insertNewGroup(InsertNewGroupRequestPayload payload) {
-        int update = template.update(
-                "INSERT INTO groups (" +
-                        "nazva, kurs, fakult, galuz, spec, okr, op, rik1, rik2, skor, zao, sem)" +
-                        "VALUES (" +
-                        ":name, :courseNumber, :faculty, :branch, :specialty, :educationLevel, :educationProgram, :beginYear, :endYear, :isShortened, :isExtramural, :semesterType)",
-                new MapSqlParameterSource()
-                    .addValue("name", payload.getName())
-                    .addValue("courseNumber", payload.getCourseNumber())
-                    .addValue("faculty", payload.getFaculty())
-                    .addValue("branch", payload.getBranch())
-                    .addValue("specialty", payload.getSpecialty())
-                    .addValue("educationLevel", payload.getEducationLevel())
-                    .addValue("educationProgram", payload.getEducationProgram())
-                    .addValue("beginYear", payload.getBeginYear())
-                    .addValue("endYear", payload.getEndYear())
-                    .addValue("isShortened", payload.isShortened() ? 1 : 0)
-                    .addValue("isExtramural", payload.isExtramural() ? 1 : 0)
-                    .addValue("semesterType", payload.getSemesterType().getNumber())
-        );
+	public FindGroupViewsByParameterResponsePayload findGroupViewsByParameter(
+			FindGroupViewsByParameterRequestPayload payload) {
+		List<GroupView> result = template.query(
+				"SELECT id, nazva FROM groups WHERE " +
+						"cast(" + payload.getParameterKey() + " as varchar(512)) ~ cast(:parameterValue as varchar(512))",
+				new MapSqlParameterSource("parameterValue", payload.getParameterValue()),
+				viewMapper
+		);
+		return FindGroupViewsByParameterResponsePayload.builder()
+				.groups(result)
+				.build();
+	}
 
-        return InsertNewGroupResponsePayload.builder()
-                .isSuccessful(update == 1)
-                .build();
-    }
+	public InsertNewGroupResponsePayload insertNewGroup(InsertNewGroupRequestPayload payload) {
+		int update = template.update(
+				"INSERT INTO groups (" +
+						"nazva, kurs, fakult, galuz, spec, okr, op, rik1, rik2, skor, zao, sem)" +
+						"VALUES (" +
+						":name, :courseNumber, :faculty, :branch, :specialty, :educationLevel, :educationProgram, :beginYear, :endYear, :isShortened, :isExtramural, :semesterType)",
+				new MapSqlParameterSource()
+						.addValue("name", payload.getName())
+						.addValue("courseNumber", payload.getCourseNumber())
+						.addValue("faculty", payload.getFaculty())
+						.addValue("branch", payload.getBranch())
+						.addValue("specialty", payload.getSpecialty())
+						.addValue("educationLevel", payload.getEducationLevel())
+						.addValue("educationProgram", payload.getEducationProgram())
+						.addValue("beginYear", payload.getBeginYear())
+						.addValue("endYear", payload.getEndYear())
+						.addValue("isShortened", payload.isShortened() ? 1 : 0)
+						.addValue("isExtramural", payload.isExtramural() ? 1 : 0)
+						.addValue("semesterType", payload.getSemesterType().getNumber())
+		);
 
-    public DeleteGroupByIdResponsePayload deleteGroupById(DeleteGroupByIdRequestPayload payload) {
-        int update = template.update(
-            "DELETE FROM groups WHERE id = :id;",
-                new BeanPropertySqlParameterSource(payload)
-        );
+		return InsertNewGroupResponsePayload.builder()
+				.isSuccessful(update == 1)
+				.build();
+	}
 
-        return DeleteGroupByIdResponsePayload.builder()
-                .isSuccessful(update == 1)
-                .build();
-    }
+	public DeleteGroupByIdResponsePayload deleteGroupById(DeleteGroupByIdRequestPayload payload) {
+		int update = template.update(
+				"DELETE FROM groups WHERE id = :id;",
+				new BeanPropertySqlParameterSource(payload)
+		);
 
-    public UpdateGroupByParameterResponsePayload updateGroupByParameter(UpdateGroupByParameterRequestPayload payload) {
-        int update = template.update(
-                "UPDATE groups " +
-                "SET " + payload.getParameterKey() + " = :parameterValue " +
-                "WHERE id = :id",
-                new MapSqlParameterSource("parameterValue", payload.getParameterValue())
-                        .addValue("id", payload.getId())
-        );
+		return DeleteGroupByIdResponsePayload.builder()
+				.isSuccessful(update == 1)
+				.build();
+	}
 
-        return UpdateGroupByParameterResponsePayload.builder()
-                .isSuccessful(update == 1)
-                .build();
-    }
+	public UpdateGroupByParameterResponsePayload updateGroupByParameter(UpdateGroupByParameterRequestPayload payload) {
+		int update = template.update(
+				"UPDATE groups " +
+						"SET " + payload.getParameterKey() + " = :parameterValue " +
+						"WHERE id = :id",
+				new MapSqlParameterSource("parameterValue", payload.getParameterValue())
+						.addValue("id", payload.getId())
+		);
 
+		return UpdateGroupByParameterResponsePayload.builder()
+				.isSuccessful(update == 1)
+				.build();
+	}
 
+	public GetGroupsByCourseNumberAndAcademicYearResponsePayload getGroupsByCourseNumberAndAcademicYear(
+			GetGroupsByCourseNumberAndAcademicYearRequestPayload payload) {
+		List<GroupView> group = template.query(
+				"SELECT id, nazva FROM groups WHERE " +
+						"nazva ~ :groupNamePart AND " +
+						"kurs = :courseNumber AND " +
+						"sem = :semester AND " +
+						"rik1 = :beginYear AND " +
+						"rik2 = :endYear;",
+				new MapSqlParameterSource()
+					.addValue("groupNamePart", payload.getGroupNamePart())
+					.addValue("courseNumber", payload.getCourseNumber())
+					.addValue("beginYear", payload.getBeginYear())
+					.addValue("endYear", payload.getEndYear())
+					.addValue("semester", (payload.getSemester() + 1) % 2 + 1),
+				viewMapper);
+
+		return GetGroupsByCourseNumberAndAcademicYearResponsePayload.builder()
+				.groups(group)
+				.build();
+	}
+
+	public GetGroupByIdResponsePayload getGroupById(GetGroupByIdRequestPayload payload) {
+		Group group = template.queryForObject(
+				"SELECT * FROM groups WHERE id = :id",
+				new BeanPropertySqlParameterSource(payload),
+				mapper);
+
+		return GetGroupByIdResponsePayload.builder()
+				.group(group)
+				.build();
+	}
 }

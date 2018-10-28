@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 public class InsertNewDisciplineRequestPayload {
-    private String name;
-    private String shortName;
-    private int semesterNumber;
-    private WorkType workType;
+	private String name;
+	private String shortName;
+	private int semesterNumber;
+	private WorkType workType;
 }

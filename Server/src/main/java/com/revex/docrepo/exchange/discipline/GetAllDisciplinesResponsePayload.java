@@ -9,5 +9,5 @@ import java.util.List;
 @Data
 @Builder
 public class GetAllDisciplinesResponsePayload {
-    private List<Discipline> disciplines;
+	private List<Discipline> disciplines;
 }

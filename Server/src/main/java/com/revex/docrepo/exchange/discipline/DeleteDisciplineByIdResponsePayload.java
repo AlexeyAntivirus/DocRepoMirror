@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 @Builder
 public class DeleteDisciplineByIdResponsePayload {
-    private boolean isSuccessful;
+	private boolean isSuccessful;
 }

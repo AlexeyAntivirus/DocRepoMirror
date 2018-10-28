@@ -2,6 +2,8 @@ package com.revex.docrepo.controllers;
 
 import com.revex.docrepo.exchange.teacher.DeleteTeacherByIdResponsePayload;
 import com.revex.docrepo.exchange.teacher.DeleteTeacherByIdRequestPayload;
+import com.revex.docrepo.exchange.teacher.FindTeacherViewsByParamRequestPayload;
+import com.revex.docrepo.exchange.teacher.FindTeacherViewsByParamResponsePayload;
 import com.revex.docrepo.exchange.teacher.FindTeachersByParamRequestPayload;
 import com.revex.docrepo.exchange.teacher.FindTeachersByParamResponsePayload;
 import com.revex.docrepo.exchange.teacher.GetAllTeacherViewsResponsePayload;
@@ -25,50 +27,57 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/teacher")
 public class TeacherController {
 
-    private final TeacherService service;
+	private final TeacherService service;
 
-    @Autowired
-    public TeacherController(TeacherService service) {
-        this.service = service;
-    }
+	@Autowired
+	public TeacherController(TeacherService service) {
+		this.service = service;
+	}
 
-    @GetMapping("/all")
-    @ResponseBody
-    public GetAllTeachersResponsePayload getAllTeachers() {
-        return this.service.getAllTeachers();
-    }
+	@GetMapping("/all")
+	@ResponseBody
+	public GetAllTeachersResponsePayload getAllTeachers() {
+		return this.service.getAllTeachers();
+	}
 
-    @GetMapping("/view/all")
-    @ResponseBody
-    public GetAllTeacherViewsResponsePayload getAllTeacherViews() {
-        return this.service.getAllTeacherViews();
-    }
+	@GetMapping("/view/all")
+	@ResponseBody
+	public GetAllTeacherViewsResponsePayload getAllTeacherViews() {
+		return this.service.getAllTeacherViews();
+	}
 
-    @PostMapping("/find")
-    @ResponseBody
-    public FindTeachersByParamResponsePayload findTeachersByParam(
-            @RequestBody FindTeachersByParamRequestPayload payload) {
-        return this.service.findTeachersByParam(payload);
-    }
+	@PostMapping("/find")
+	@ResponseBody
+	public FindTeachersByParamResponsePayload findTeachersByParam(
+			@RequestBody FindTeachersByParamRequestPayload payload) {
+		return this.service.findTeachersByParam(payload);
+	}
 
-    @PutMapping("/insert")
-    @ResponseBody
-    public InsertNewTeacherResponsePayload insertNewTeacher(
-            @RequestBody InsertNewTeacherRequestPayload payload) {
-        return this.service.insertNewTeacher(payload);
-    }
+	@PostMapping("/view/find")
+	@ResponseBody
+	public FindTeacherViewsByParamResponsePayload findTeachersByParam(
+			@RequestBody FindTeacherViewsByParamRequestPayload payload) {
+		return this.service.findTeacherViewsByParam(payload);
+	}
 
-    @DeleteMapping("/delete")
-    @ResponseBody
-    public DeleteTeacherByIdResponsePayload deleteTeacherById(
-            DeleteTeacherByIdRequestPayload payload) {
-        return this.service.deleteTeacherById(payload);
-    }
+	@PutMapping("/insert")
+	@ResponseBody
+	public InsertNewTeacherResponsePayload insertNewTeacher(
+			@RequestBody InsertNewTeacherRequestPayload payload) {
+		return this.service.insertNewTeacher(payload);
+	}
 
-    @PostMapping("/update")
-    @ResponseBody
-    public UpdateTeacherByParamResponsePayload updateTeacherByParam(
-            @RequestBody UpdateTeacherByParamRequestPayload payload) {
-        return this.service.updateTeacherByParam(payload);
-    }
+	@DeleteMapping("/delete")
+	@ResponseBody
+	public DeleteTeacherByIdResponsePayload deleteTeacherById(
+			DeleteTeacherByIdRequestPayload payload) {
+		return this.service.deleteTeacherById(payload);
+	}
+
+	@PostMapping("/update")
+	@ResponseBody
+	public UpdateTeacherByParamResponsePayload updateTeacherByParam(
+			@RequestBody UpdateTeacherByParamRequestPayload payload) {
+		return this.service.updateTeacherByParam(payload);
+	}
 }

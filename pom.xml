@@ -8,6 +8,7 @@
 	<version>0.1.0</version>
 	<modules>
 		<module>Server</module>
+		<module>Client</module>
 	</modules>
 	<!--<modules>-->
 		<!--<module>eduforge-client</module>-->
