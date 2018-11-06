@@ -4,6 +4,7 @@ import com.revex.docrepo.controllers.QualificationWorkController;
 import com.revex.docrepo.exceptions.DocRepoApplicationException;
 import com.revex.docrepo.exceptions.DocRepoFileNotDeletedException;
 import com.revex.docrepo.exceptions.DocRepoFileNotUploadedException;
+import com.revex.docrepo.exceptions.DocRepoFilesProblemException;
 import com.revex.docrepo.exceptions.DocRepoPathTraversalAttackException;
 import com.revex.docrepo.utils.ApiError;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,8 @@ public class QualificationWorkControllerAdvice {
     @ExceptionHandler({
             DocRepoPathTraversalAttackException.class,
             DocRepoFileNotUploadedException.class,
-            DocRepoFileNotDeletedException.class
+            DocRepoFileNotDeletedException.class,
+            DocRepoFilesProblemException.class
     })
     public final ResponseEntity<ApiError> pathTraversalAttack(DocRepoApplicationException e) {
         return ResponseEntity.badRequest()
@@ -24,4 +26,5 @@ public class QualificationWorkControllerAdvice {
                         .reason(e.getMessage())
                         .build());
     }
+
 }

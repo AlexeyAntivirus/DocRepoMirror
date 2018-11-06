@@ -1,5 +1,7 @@
 package com.revex.docrepo.controllers;
 
+import com.revex.docrepo.exchange.student.FindStudentViewsByFullNameAndGroupRequestPayload;
+import com.revex.docrepo.exchange.student.FindStudentViewsByFullNameAndGroupResponsePayload;
 import com.revex.docrepo.exchange.student.FindStudentViewsByParamRequestParameterRequestPayload;
 import com.revex.docrepo.exchange.student.FindStudentViewsByParamRequestParameterResponsePayload;
 import com.revex.docrepo.exchange.student.GetAllStudentsResponsePayload;
@@ -38,5 +40,13 @@ public class StudentController {
 	public InsertNewStudentResponsePayload insertNewStudent(@RequestBody InsertNewStudentRequestPayload payload) {
 		return this.service.insertNewStudent(payload);
 	}
+
+	@ResponseBody
+	@PostMapping("/view/find-by-fullname-and-group")
+	public FindStudentViewsByFullNameAndGroupResponsePayload findStudentViewsByFullNameAndGroup(
+			@RequestBody FindStudentViewsByFullNameAndGroupRequestPayload payload) {
+		return this.service.findStudentViewsByFullNameAndGroup(payload);
+	}
+
 
 }

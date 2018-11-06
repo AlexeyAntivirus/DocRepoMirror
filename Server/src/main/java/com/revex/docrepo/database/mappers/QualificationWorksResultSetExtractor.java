@@ -26,7 +26,7 @@ public class QualificationWorksResultSetExtractor implements ResultSetExtractor<
 		long currentQualificationWorkId = 0;
 
 		Set<QualificationWork> qualificationWorks = new HashSet<>();
-		List<TeacherView> teachers = new ArrayList<>();
+		List<Long> teachers = new ArrayList<>();
 		boolean isEmpty = true;
 
 		while (rs.next()) {
@@ -98,10 +98,7 @@ public class QualificationWorksResultSetExtractor implements ResultSetExtractor<
 
 			long teacherId = rs.getLong("teacherId");
 			if (teacherId != 0) {
-				teachers.add(TeacherView.builder()
-						.id(teacherId)
-						.fullName(rs.getString("teacherFullName"))
-						.build());
+				teachers.add(teacherId);
 			}
 		}
 

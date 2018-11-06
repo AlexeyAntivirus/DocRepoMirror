@@ -4,12 +4,15 @@ import com.revex.docrepo.database.entities.Student;
 import com.revex.docrepo.database.mappers.StudentMapper;
 import com.revex.docrepo.database.mappers.StudentViewMapper;
 import com.revex.docrepo.database.views.StudentView;
+import com.revex.docrepo.exchange.student.FindStudentViewsByFullNameAndGroupRequestPayload;
+import com.revex.docrepo.exchange.student.FindStudentViewsByFullNameAndGroupResponsePayload;
 import com.revex.docrepo.exchange.student.FindStudentViewsByParamRequestParameterRequestPayload;
 import com.revex.docrepo.exchange.student.FindStudentViewsByParamRequestParameterResponsePayload;
 import com.revex.docrepo.exchange.student.GetAllStudentsResponsePayload;
 import com.revex.docrepo.exchange.student.InsertNewStudentRequestPayload;
 import com.revex.docrepo.exchange.student.InsertNewStudentResponsePayload;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -73,7 +76,7 @@ public class StudentService {
 						"VALUES (:studentId, :groupId, :beginYear, :endYear, :semester);",
 				new MapSqlParameterSource()
 						.addValue("studentId", studentId)
-						.addValue("groupId", payload.getGroupId())
+						.addValue("groupId", payload.getGroup().getId())
 						.addValue("beginYear", payload.getBeginYear())
 						.addValue("endYear", payload.getEndYear())
 						.addValue("semester", payload.getSemesterType().getNumber())
@@ -81,6 +84,23 @@ public class StudentService {
 
 		return InsertNewStudentResponsePayload.builder()
 				.isSuccessful(update == 1)
+				.build();
+	}
+
+	public FindStudentViewsByFullNameAndGroupResponsePayload findStudentViewsByFullNameAndGroup(
+			FindStudentViewsByFullNameAndGroupRequestPayload payload) {
+
+		List<StudentView> query = template.query("SELECT stud.id, pib FROM stud\n" +
+						"JOIN sg on stud.id = sg.idstud\n" +
+						"WHERE sg.idgroup = :groupId\n" +
+						"    AND pib ~ :studentFullNamePart\n" +
+						"\tAND sg.sem = (:semesterNumber + 1) % 2 + 1\n" +
+						"\tAND sg.rik1 = :beginYear\n" +
+						"\tAND sg.rik2 = :endYear",
+				new BeanPropertySqlParameterSource(payload),
+				viewMapper);
+		return FindStudentViewsByFullNameAndGroupResponsePayload.builder()
+				.students(query)
 				.build();
 	}
 }

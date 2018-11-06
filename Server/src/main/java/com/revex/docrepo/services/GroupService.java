@@ -123,19 +123,26 @@ public class GroupService {
 
 	public GetGroupsByCourseNumberAndAcademicYearResponsePayload getGroupsByCourseNumberAndAcademicYear(
 			GetGroupsByCourseNumberAndAcademicYearRequestPayload payload) {
+
+		MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+				.addValue("groupNamePart", payload.getGroupNamePart())
+				.addValue("courseNumber", payload.getCourseNumber())
+				.addValue("beginYear", payload.getBeginYear())
+				.addValue("endYear", payload.getEndYear())
+				.addValue("semester", (payload.getSemester() + 1) % 2 + 1)
+				.addValue("isShortened", payload.isShortened() ? 1 : 0)
+				.addValue("isExtramural", payload.isExtramural() ? 1 : 0);
+
 		List<GroupView> group = template.query(
 				"SELECT id, nazva FROM groups WHERE " +
 						"nazva ~ :groupNamePart AND " +
 						"kurs = :courseNumber AND " +
 						"sem = :semester AND " +
 						"rik1 = :beginYear AND " +
-						"rik2 = :endYear;",
-				new MapSqlParameterSource()
-					.addValue("groupNamePart", payload.getGroupNamePart())
-					.addValue("courseNumber", payload.getCourseNumber())
-					.addValue("beginYear", payload.getBeginYear())
-					.addValue("endYear", payload.getEndYear())
-					.addValue("semester", (payload.getSemester() + 1) % 2 + 1),
+						"rik2 = :endYear AND " +
+						"skor = :isShortened AND " +
+						"zao = :isExtramural;",
+				sqlParameterSource,
 				viewMapper);
 
 		return GetGroupsByCourseNumberAndAcademicYearResponsePayload.builder()

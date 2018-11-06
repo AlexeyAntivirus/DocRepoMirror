@@ -63,4 +63,11 @@ public class DisciplineController {
 			@RequestBody UpdateDisciplineByParamRequestPayload payload) {
 		return this.service.updateDisciplineByParam(payload);
 	}
+
+	@PostMapping("/find-by-semester-number-and-part")
+	@ResponseBody
+	public FindDisciplineViewsBySemesterNumberResponsePayload findDisciplineViewsBySemesterNumber(
+			@RequestBody FindDisciplineViewsBySemesterNumberRequestPayload payload) {
+		return this.service.findDisciplineViewsBySemesterNumber(payload);
+	}
 }

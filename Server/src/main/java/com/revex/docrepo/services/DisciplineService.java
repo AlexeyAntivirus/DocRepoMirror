@@ -8,6 +8,8 @@ import com.revex.docrepo.exchange.discipline.DeleteDisciplineByIdRequestPayload;
 import com.revex.docrepo.exchange.discipline.DeleteDisciplineByIdResponsePayload;
 import com.revex.docrepo.exchange.discipline.FindDisciplineViewsByParameterRequestPayload;
 import com.revex.docrepo.exchange.discipline.FindDisciplineViewsByParameterResponsePayload;
+import com.revex.docrepo.exchange.discipline.FindDisciplineViewsBySemesterNumberRequestPayload;
+import com.revex.docrepo.exchange.discipline.FindDisciplineViewsBySemesterNumberResponsePayload;
 import com.revex.docrepo.exchange.discipline.FindDisciplinesByParameterRequestPayload;
 import com.revex.docrepo.exchange.discipline.FindDisciplinesByParameterResponsePayload;
 import com.revex.docrepo.exchange.discipline.GetAllDisciplineViewsResponsePayload;
@@ -123,4 +125,12 @@ public class DisciplineService {
 				.build();
 	}
 
+	public FindDisciplineViewsBySemesterNumberResponsePayload findDisciplineViewsBySemesterNumber(
+			FindDisciplineViewsBySemesterNumberRequestPayload payload) {
+		List<DisciplineView> query = template.query("SELECT id, nazva FROM predm WHERE sem = :semesterNumber AND nazva ~ :part",
+				new BeanPropertySqlParameterSource(payload), viewMapper);
+		return FindDisciplineViewsBySemesterNumberResponsePayload.builder()
+				.disciplines(query)
+				.build();
+	}
 }

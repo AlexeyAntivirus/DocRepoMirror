@@ -9,4 +9,6 @@ public class GetGroupsByCourseNumberAndAcademicYearRequestPayload {
 	private int beginYear;
 	private int endYear;
 	private int semester;
+	private boolean isExtramural;
+	private boolean isShortened;
 }

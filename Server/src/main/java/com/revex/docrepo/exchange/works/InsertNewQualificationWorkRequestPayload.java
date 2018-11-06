@@ -12,6 +12,7 @@ import java.util.List;
 
 @Data
 public class InsertNewQualificationWorkRequestPayload {
+	private long id;
 	private int beginYear;
 	private int endYear;
 	private int semesterNumber;
@@ -33,7 +34,7 @@ public class InsertNewQualificationWorkRequestPayload {
 	private int grade;
 	private int courseNumber;
 	private String teacherNames;
-	private List<TeacherView> teachers;
+	private List<Long> teachers;
 	private boolean isExtramural;
 	private boolean isShortened;
 }
